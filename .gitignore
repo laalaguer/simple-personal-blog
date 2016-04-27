@@ -3,3 +3,6 @@ appengine-generated/
 
 # Python generated files pyc
 *.pyc
+
+# Mac trash
+.DS_Store
