@@ -1,0 +1,84 @@
+{#
+	come_from - where this page is reffered
+	search_blog - search page serivce point
+	view_blog - web page serivce point
+	article - object
+	tags - all the tags in this site.
+	related - all the articles has the same tag in this article.
+	recently - all the articles recently edited.
+#}
+{% extends "motherplate.html" %}
+{% block  html_language %} {{ super() }} {% endblock %}
+{% block  html_title %} {{ article.title }} - Simple Personal Blog {% endblock %}
+{% block  html_head %} {{ super() }}  {% endblock %}
+{% block  html_navigation %} {{ super() }} {% endblock %}
+{% block  html_pageheader_title %} 
+    <h1>{{ article.title }}</h1>
+    <hr class="small">
+    <span class="subheading">
+		{% if article.tags %}
+    	{% for each in article.tags %}
+			{{ each }}
+		{% endfor %}
+		{% endif %}
+    </span>
+{% endblock %}
+{% block  html_navigation_links %}  {% endblock %}
+{% block  html_navigation_search_form %} {{ super() }} {% endblock %}
+{% block  html_pageheader_img %} {{ super() }} {% endblock %}
+{% block  html_maincontent %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-8">
+					<ol class="breadcrumb">
+					  <li><a href="/">Home</a></li>
+					  <li><a href="{{ come_from }}">Posts</a></li>
+					  <li class="active">{{ article.title }}</li>
+					</ol>
+					<h6 class="pull-right"><em>Written by - {{ article.author }}, Last updated: {{ article.last_touch_date.strftime('%Y-%m-%d %H:%M:%S') }}</em></h6>
+					<br>
+                    {{ article.html_body }}
+				</div>
+				<div class="col-lg-4 col-md-4">
+					<div class="">
+						<h3> Search in this site</h3>
+						<form class="" role="search" onsubmit="return false;">
+						  <div class="form-group" style="padding: 5px;" action="/abc">
+							  <input type="text" class="form-control searchbloginput" placeholder="Search">
+						  </div>
+						</form>
+						<p>
+					  		{% if tags %}
+					      	{% for each in tags %}
+								<a href="#">{{ each }}</a>
+					  		{% endfor %}
+					  		{% endif %}
+						</p>
+						<div class="panel panel-default">
+  						  <div class="panel-heading">Related</div>
+						  <ul class="list-group">
+					  		{% if related %}
+					      	{% for each in related %}
+					  			<li class="list-group-item"><a href="{{ view_blog }}{{ each.public_hash_id }}">{{ each.title }}</li>
+					  		{% endfor %}
+					  		{% endif %}
+						  </ul>
+						</div>
+						<div class="panel panel-success">
+  						  <div class="panel-heading">Recently</div>
+						  <ul class="list-group">
+  					  		{% if recently %}
+  					      	{% for each in recently %}
+  					  			<li class="list-group-item"><a href="{{ view_blog }}{{ each.public_hash_id }}">{{ each.title }}</li>
+  					  		{% endfor %}
+  					  		{% endif %}
+						    </ul>
+						</div>
+					</div>
+				</div>
+            </div>
+        </div>
+{% endblock %}
+{% block  html_footer %} {{ super() }} {% endblock %}
+{% block  html_js %} {{ super() }}
+{% endblock %}

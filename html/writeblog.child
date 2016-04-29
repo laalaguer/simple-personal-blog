@@ -1,0 +1,226 @@
+{#
+	view_blog - web page serivce point
+#}
+{% extends "motherplate.html" %}
+{% block  html_language %} {{ super() }} {% endblock %}
+{% block  html_title %}Write Blog - Simple Personal Blog{% endblock %}
+{% block  html_head %}
+<link href="/css/dropzone.css" rel="stylesheet">
+<link href="/css/mydropzone.css" rel="stylesheet">
+<link href="/ckeditor/plugins/codesnippet/lib/highlight/styles/default.css" rel="stylesheet">
+<script src="/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
+{% endblock %}
+{% block  html_navigation %} {{ super() }} {% endblock %}
+{% block  html_navigation_links %} {{ super() }} {% endblock %}
+{% block  html_navigation_search_form %}{% endblock %}
+{% block  html_pageheader_title %}
+	<h2>Write and Upload</h2>
+{% endblock %}
+{% block  html_pageheader_img %} {{ super() }} {% endblock %}
+{% block  html_maincontent %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-8">
+				<div>
+					<div class="input-group">
+					  <span class="input-group-addon" id="basic-addon2">Title</span>
+					  <input id="articletitle" type="text" class="form-control" placeholder="Title of your Article" aria-describedby="basic-addon2">
+					</div>
+					<hr>
+					<div class="input-group">
+					  <span class="input-group-addon" id="basic-addon2">Author</span>
+					  <input id="articleauthor" type="text" class="form-control" placeholder="Your name here" aria-describedby="basic-addon2">
+					</div>
+					<div class="input-group">
+					  <span class="input-group-addon" id="basic-addon2">Tags</span>
+					  <input id="articletags" type="text" class="form-control" placeholder="work travel ... etc separete by space" aria-describedby="basic-addon2">
+					</div>
+					<div class="input-group">
+					  <span class="input-group-addon" id="basic-addon2">Which languages in this article?</span>
+					  <input id="articlelanguagetags" type="text" class="form-control" placeholder="chinese english, etc, separente by space" aria-describedby="basic-addon2">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon2">Public or Private article?</span>
+						<select id="articlepublic" class="form-control">
+						  <option value='true'>It can be public</option>
+						  <option value='false'>It is private</option>
+						</select>
+					</div>
+				</div>
+				<hr>
+				<textarea name="editor1" id="editor1" rows="10" cols="80">
+				   This is my textarea to be replaced with CKEditor.
+	            </textarea>
+				<div>
+					<button class="btn btn-danger btn-block" id="savehtmlbtn">save data</button>
+				</div>
+				<div id="editorcontentonthefly" class="blog-edit-demo"></div>
+            </div>
+            <div class="col-lg-4 col-md-4">
+		        <div id="myuploadzone" class="dropzone">
+		            <div class="dz-message">
+		                Drag/Drop or Click to upload Images
+		                <br> <span class="note">Only Images are allowed</span>
+		            </div>
+		        </div>
+				
+				<div id="myuploadpreviewzone" class="">
+					<p>Uploaded</p>
+				</div> <!--myuploadpreviewzone-->
+				
+				<div id="alreadytherepreviewzone" class="">
+					<p>On the server</p>
+					
+	                {% for each in already_on_server %}					
+					<div class="media" id="id-{{ each.public_hash_id }}">
+					  <div class="media-left" href="#">
+					    <img class="media-object img-64" src="{{ blob_serving_url }}{{ each.blob_256 }}" data-src="" alt="Generic placeholder image">
+						<a href="{{ delete_image_collection }}{{ each.public_hash_id }}" class="deletepicturebtn" data-id="{{ each.public_hash_id }}"><h6>delete me</h6></a>
+					  </div>
+					  <div class="media-body">
+						<div class="input-group">
+						  <input type="text" class="form-control" placeholder="256px" aria-describedby="basic-addon2" value="{{ blob_serving_url }}{{ each.blob_256 }}">
+						  <span class="input-group-addon" id="basic-addon2">256px</span>
+						</div>
+						<div class="input-group">
+						  <input type="text" class="form-control" placeholder="512px" aria-describedby="basic-addon2" value="{{ blob_serving_url }}{{ each.blob_512 }}">
+						  <span class="input-group-addon" id="basic-addon2">512px</span>
+						</div>
+						<div class="input-group">
+						  <input type="text" class="form-control" placeholder="800px" aria-describedby="basic-addon2" value="{{ blob_serving_url }}{{ each.blob_800 }}">
+						  <span class="input-group-addon" id="basic-addon2">800px</span>
+						</div>
+						<div class="input-group">
+						  <input type="text" class="form-control" placeholder="1600px" aria-describedby="basic-addon2" value="{{ blob_serving_url }}{{ each.blob_1600 }}">
+						  <span class="input-group-addon" id="basic-addon2">1600px</span>
+						</div>
+					  </div>
+	                {% endfor %}
+					</div><!--alreadytherepreviewzone-->
+				</div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block  html_js %}
+<script src="/js/dropzone.js"></script>
+<script src="/js/minified.js"></script>
+<script>
+	var MINI = require('minified');
+	var _=MINI._, $=MINI.$, $$=MINI.$$, EE=MINI.EE, HTML=MINI.HTML;
+	
+	Dropzone.autoDiscover = false; // turn off the auto discovery, we can set url dynamic
+    var myDropzone = new Dropzone(
+        "div#myuploadzone",
+        { 
+            url: "{{ blob_process }}",
+            addRemoveLinks: true,
+            acceptedFiles: 'image/*',
+            parallelUploads: 1,
+            uploadMultiple: false,
+            maxFilesize: {{ max_upload_size }},
+        }
+    );
+	
+    myDropzone.on("processing", function(file){
+        // we request for a new url for uploading next
+        var result = $.request('get', '{{ refresh_url }}');
+        result.then(function success(txt) {
+            myDropzone.options.url =  txt; // get a new upload url
+        });
+    });
+	
+    myDropzone.on("error", function(file, message){
+        // we request for a new url for uploading next
+        var result = $.request('get', '{{ refresh_url }}');
+        result.then(function success(txt) {
+            myDropzone.options.url =  txt; // get a new upload url
+        });
+    });
+
+    myDropzone.on("success", function(file, message) {
+		var a_media = EE('div',{'@class':'media'});
+		var a_media_left = EE('div',{'@class':"media-left"});
+		var a_media_left_delete_a = EE('a',{'@href':'{{ delete_image_collection }}'+message.public_hash_id, '@class':'deletepicturebtn'});
+		var a_media_left_delete_h6 = EE('h6',{'@href':'{{ delete_image_collection }}'+message.public_hash_id}, '');
+		var a_img = EE('img', {'@class':"media-object img-64", '@src':'{{ blob_serving_url }}' + message.stored[3].blob_key, '@alt':"Generic placeholder image"});
+		var a_media_body = EE('div', {'@class':'media-body'});
+		
+		for (var i=0;i<message.stored.length;i++){
+			var a_input_group = EE('div',{'@class':'input-group'});
+			var a_input = EE('input', {'@type':'text','@class':'form-control','@value':'{{ blob_serving_url }}' + message.stored[i].blob_key});
+			
+			var file_name_list = message.stored[i].filename.split('_')
+			var file_name = file_name_list[file_name_list.length-1]			
+			var a_addon = EE('span',{'@class':'input-group-addon'},file_name+'px');
+			a_input_group.add(a_input);
+			a_input_group.add(a_addon);
+			a_media_body.add(a_input_group);
+		}
+		a_media_left.add(a_img);
+		a_media_left_delete_a.add(a_media_left_delete_h6);
+		a_media_left.add(a_media_left_delete_a)
+		a_media.add(a_media_left);
+		a_media.add(a_media_body);
+		$('#myuploadpreviewzone').add(a_media);
+    });
+	
+	// delete picture that is already on the server
+	function deletepicturehandler(event, index){
+        // we request for a new url for uploading next
+        var result = $.request('get', event.target.parentElement.getAttribute("href")); //<a>
+        result.then(function success(txt) {
+			event.target.parentElement.innerHTML = '<h6 style="color: red;">deleted</h6>';
+        });
+	}
+	$('.deletepicturebtn').onClick(deletepicturehandler);
+	
+			
+</script>
+<script src="/ckeditor/ckeditor.js"></script>
+<script>hljs.initHighlightingOnLoad();//load hightlight on code snippet</script>
+<script>
+	var editor1 = CKEDITOR.replace( 'editor1',{
+		codeSnippet_theme:'monokai_sublime',
+		language: 'en'
+	});
+	editor1.on( 'change', function ( ev ) {
+		document.getElementById( 'editorcontentonthefly' ).innerHTML = editor1.getData();
+	} );
+	
+	// send an article object to server
+	function sendArticleToServer() {
+		var obj = {}
+		obj['title'] = $('#articletitle').values().articletitle;
+		obj['author'] = $('#articleauthor').values().articleauthor;
+		
+		var re = /\s+/;
+		obj['tags'] = $('#articletags').values().articletags.trim(/\s/).replace(/,/g,' ').split(re)
+		obj['language_tags'] = $('#articlelanguagetags').values().articlelanguagetags.trim(/\s/).replace(/,/g,' ').split(re);
+
+		if ($('#articlepublic').values().articlepublic == 'true'){
+			obj['public'] = true;
+		} else {
+			obj['public'] = false;
+		}
+		
+		obj['html_body'] = editor1.getData();		
+		new_obj = {}
+		new_obj['article'] = obj
+		objjson =  $.toJSON(new_obj);
+		// console.log(objjson);
+		var result = $.request('post', '/article', objjson, {'Content-Type':'application/json'});
+        result.then(function success(txt) {
+			$('#savehtmlbtn').set('innerHTML', 'saved!');
+			$('#savehtmlbtn').set('@class', 'btn btn-success btn-block');
+        },
+        function error(status, statusText, responseText) {
+            alert("Error accessing service." + responseText);
+        });
+	}
+	
+	$('#savehtmlbtn').onClick(sendArticleToServer);
+</script>
+{% endblock %}

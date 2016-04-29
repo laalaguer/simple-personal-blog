@@ -1,0 +1,69 @@
+{#
+	view_blog - web page serivce point
+	search_blog - search page serivce point
+	list_blog - the current page location service point
+	title_part - part of the listing title
+	articles - all the articles that can show up in this post
+	allow_edit - flag that can let user get an edit page
+	has_next - flag that have more results on the right side
+	next_offset - the starting point of next page
+	has_previous - flag that have more results on the left side
+	previous_offset - the starting point of previous page
+	amount - amount of results to fetch
+	count - the number in current page
+#}
+{% extends "motherplate.html" %}
+{% block  html_language %} {{ super() }} {% endblock %}
+{% block  html_title %} {{ title_part }} - Simple Personal Blog {% endblock %}
+{% block  html_head %} {{ super() }}  {% endblock %}
+{% block  html_navigation %} {{ super() }} {% endblock %}
+{% block  html_pageheader_title %} 
+	<h1>{{ title_part }}</h1>
+    <hr class="small">
+    <span class="subheading">{{ count }} articles this page</span>
+{% endblock %}
+{% block  html_navigation_links %} {{ super() }} {% endblock %}
+{% block  html_navigation_search_form %} {{ super() }} {% endblock %}
+{% block  html_pageheader_img %} {{ super() }} {% endblock %}
+{% block  html_maincontent %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2  col-md-8 col-lg-offset-2">
+					{% if articles %}
+			    	{% for each in articles %}
+		                <div class="post-preview">
+		                    <a href="{{ view_blog }}{{ each.public_hash_id }}">
+		                        <h2 class="post-title">
+									{{ each.title }}
+		                        </h2>
+		                        <h3 class="post-subtitle">
+		                            {% for eachtag in each.tags %}
+										{{ eachtag }}
+									{% endfor %}
+		                        </h3>
+		                    </a>
+		                    <p class="post-meta">Posted by <a href="#">{{ each.author }}</a> on {{ each.last_touch_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+		                </div>
+		                <hr>
+					{% endfor %}
+					{% endif %}
+	                <!-- Pager -->
+	                <ul class="pager">
+						{% if has_previous %}
+		                    <li class="previous">
+		                        <a href="{{ list_blog }}?offset={{ previous_offset }}&amount={{ amount }}">&larr;Previous Page</a>
+		                    </li>
+						{% endif %}
+						
+						{% if has_next %}
+		                    <li class="next">
+		                        <a href="{{ list_blog }}?offset={{ next_offset }}&amount={{ amount }}">Next Page &rarr;</a>
+		                    </li>
+						{% endif %}
+	                </ul>
+				</div><!--col-lg-8-->
+			</div>
+		</div>
+{% endblock %}
+{% block  html_footer %} {{ super() }} {% endblock %}
+{% block  html_js %}{{ super() }}{% endblock %}

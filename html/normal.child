@@ -1,0 +1,12 @@
+{% extends "motherplate.html" %}
+{% block  html_language %} {{ super() }} {% endblock %}
+{% block  html_title %} {{ super() }} {% endblock %}
+{% block  html_head %} {{ super() }}  {% endblock %}
+{% block  html_navigation %} {{ super() }} {% endblock %}
+{% block  html_pageheader_title %} {{ super() }} {% endblock %}
+{% block  html_navigation_links %} {{ super() }} {% endblock %}
+{% block  html_navigation_search_form %} {{ super() }} {% endblock %}
+{% block  html_pageheader_img %} {{ super() }} {% endblock %}
+{% block  html_maincontent %} {{ super() }} {% endblock %}
+{% block  html_footer %} {{ super() }} {% endblock %}
+{% block  html_js %} {{ super() }} {% endblock %}

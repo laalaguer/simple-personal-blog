@@ -1,0 +1,63 @@
+{#
+	title_part - title of page
+	blob_serving_url - the pictures comes out here
+	list_image - service point of listing images
+#}
+{% extends "motherplate.html" %}
+{% block  html_language %} {{ super() }} {% endblock %}
+{% block  html_title %} {{ title_part }} - Simple Personal Blog {% endblock %}
+{% block  html_head %}
+	<!-- Custom CSS -->
+	<link href="css/figure-hover.css" rel="stylesheet">
+{% endblock %}
+{% block  html_navigation %} {{ super() }} {% endblock %}
+{% block  html_pageheader_title %} 
+	<h1>{{ title_part }}</h1>
+{% endblock %}
+{% block  html_navigation_links %} {{ super() }} {% endblock %}
+{% block  html_navigation_search_form %} {% endblock %}
+{% block  html_pageheader_img %} {{ super() }} {% endblock %}
+{% block  html_maincontent %}
+    <div class="container">
+        <div class="row">
+			<div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+				<div class="picture-portfolio-container">
+					{% if pictures %}
+						{% for each in pictures %}
+							<div class="col-lg-4 col-md-4 col-sm-4">
+								<a class="thumbnail myimagepreview " href="{{ blob_serving_url }}{{ each.blob_1600 }}"> <!-- hovereffect -->
+									<img src="{{ blob_serving_url }}{{ each.blob_512 }}"> <!-- class="img-circle img-portfolio-preview" -->
+									<div class="overlay" style="display: none">
+										<h2>{{ each.description }}</h2>
+										<p>{{ each.last_touch_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+									</div>
+								</a>
+							</div>
+						{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+	            <!-- Pager -->
+	            <ul class="pager">
+					{% if has_previous %}
+	                    <li class="previous">
+	                        <a href="{{ list_image }}?offset={{ previous_offset }}&amount={{ amount }}">&larr;Previous Page</a>
+	                    </li>
+					{% endif %}
+				
+					{% if has_next %}
+	                    <li class="next">
+	                        <a href="{{ list_image }}?offset={{ next_offset }}&amount={{ amount }}">Next Page &rarr;</a>
+	                    </li>
+					{% endif %}
+	            </ul>
+			</div>
+		</row>
+	</div>
+{% endblock %}
+{% block  html_footer %} {{ super() }} {% endblock %}
+{% block  html_js %}
+{% endblock %}
