@@ -190,6 +190,7 @@
 		document.getElementById( 'editorcontentonthefly' ).innerHTML = editor1.getData();
 	} );
 	
+	
 	// send an article object to server
 	function sendArticleToServer() {
 		var obj = {}
@@ -215,6 +216,15 @@
         result.then(function success(txt) {
 			$('#savehtmlbtn').set('innerHTML', 'saved!');
 			$('#savehtmlbtn').set('@class', 'btn btn-success btn-block');
+
+			try {
+                var my_json_obj = $.parseJSON(txt);
+				setTimeout(function(){ window.location = '{{ view_blog }}' + my_json_obj['public_hash_id']; }, 3000); //wait 3 seconds to jump to see blog.
+				
+            }
+            catch(err) {
+                alert('wrong json');
+            }
         },
         function error(status, statusText, responseText) {
             alert("Error accessing service." + responseText);

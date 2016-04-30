@@ -50,7 +50,7 @@
 						<p>
 					  		{% if tags %}
 					      	{% for each in tags %}
-								<a href="#">{{ each }}</a>
+								<a href="{{ search_blog }}?tag={{ each }}">{{ each }}</a>
 					  		{% endfor %}
 					  		{% endif %}
 						</p>
