@@ -1,98 +1,61 @@
 {#
 	view_blog - web page serivce point
-	current_document - the document that needs to update, if not set, then is a new document
+	sitepreference - current preference in use
 #}
 {% extends "motherplate.html" %}
 {% block  html_language %} {{ super() }} {% endblock %}
-{% block  html_title %}Write Blog {% endblock %}
+{% block  html_title %}Edit Preference - Simple Personal Blog{% endblock %}
 {% block  html_head %}
 <link href="/css/dropzone.css" rel="stylesheet">
 <link href="/css/mydropzone.css" rel="stylesheet">
-<link href="/ckeditor/plugins/codesnippet/lib/highlight/styles/default.css" rel="stylesheet">
-<script src="/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
 {% endblock %}
 {% block  html_navigation %} {{ super() }} {% endblock %}
 {% block  html_navigation_links %} {{ super() }} {% endblock %}
 {% block  html_navigation_search_form %}{% endblock %}
 {% block  html_pageheader_title %}
-	<h2>Write and Upload</h2>
+	<h2>Site Preference</h2>
 {% endblock %}
 {% block  html_pageheader_img %} {{ super() }} {% endblock %}
 {% block  html_maincontent %}
-
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-md-8">
-				{% if current_document %}
+            <div class="col-lg-9 col-md-9">
+				<div>
+					<img src="/img/explain.jpg" style="width:100%">
+					<hr>
+				</div>
 				<div>
 					<div class="input-group">
-					  <span class="input-group-addon" id="basic-addon2">Title</span>
-					  <input id="articletitle" type="text" class="form-control" placeholder="Title of your Article" aria-describedby="basic-addon2" value="{{ current_document.title }}">
+					  <span class="input-group-addon" id="basic-addon2">Site Name</span>
+					  <input id="sitename" type="text" class="form-control" placeholder="{{ sitepreference.site_name }}" aria-describedby="basic-addon2" value="{{ sitepreference.site_name }}">
 					</div>
 					<hr>
 					<div class="input-group">
-					  <span class="input-group-addon" id="basic-addon2">Author</span>
-					  <input id="articleauthor" type="text" class="form-control" placeholder="Your name here" aria-describedby="basic-addon2" value="{{ current_document.author }}">
-					</div>
-					<div class="input-group">
-					  <span class="input-group-addon" id="basic-addon2">Tags</span>
-					  <input id="articletags" type="text" class="form-control" placeholder="work travel ... etc separete by space" aria-describedby="basic-addon2" value="{{ ','.join(current_document.tags) }}">
-					</div>
-					<div class="input-group">
-					  <span class="input-group-addon" id="basic-addon2">Which languages in this article?</span>
-					  <input id="articlelanguagetags" type="text" class="form-control" placeholder="chinese english, etc, separente by space" aria-describedby="basic-addon2" value="{{ ','.join(current_document.language_tags) }}">
-					</div>
-					<div class="input-group">
-						<span class="input-group-addon" id="basic-addon2">Public or Private article?</span>
-						<select id="articlepublic" class="form-control">
-					  {% if current_document.public %}
-						  <option value='true'>It can be public</option>
-						  <option value='false'>It is private</option>
-					  {% else %}
-						  <option value='true'>It can be public</option>
-						  <option value='false' selected="selected">It is private</option>
-					  {% endif %}
-						</select>
-					</div>
-				</div>
-				{% else %}
-				<div>
-					<div class="input-group">
-					  <span class="input-group-addon" id="basic-addon2">Title</span>
-					  <input id="articletitle" type="text" class="form-control" placeholder="Title of your Article" aria-describedby="basic-addon2">
+					  <span class="input-group-addon" id="basic-addon2">Profile Picture Url</span>
+					  <input id="siteprofileimg" type="text" class="form-control" placeholder="http://xxx.com or upload on the right" aria-describedby="basic-addon2" value="{{ sitepreference.profile_pic_url }}">
 					</div>
 					<hr>
 					<div class="input-group">
-					  <span class="input-group-addon" id="basic-addon2">Author</span>
-					  <input id="articleauthor" type="text" class="form-control" placeholder="Your name here" aria-describedby="basic-addon2">
+					  <span class="input-group-addon" id="basic-addon2">Site Title</span>
+					  <input id="sitetitle" type="text" class="form-control" placeholder="My Awesome Site" aria-describedby="basic-addon2" value="{{ sitepreference.site_title }}">
 					</div>
+					<hr>
 					<div class="input-group">
-					  <span class="input-group-addon" id="basic-addon2">Tags</span>
-					  <input id="articletags" type="text" class="form-control" placeholder="work travel ... etc separete by space" aria-describedby="basic-addon2">
+					  <span class="input-group-addon" id="basic-addon2">Site Subtitle</span>
+					  <input id="sitesubtitle" type="text" class="form-control" placeholder="About My work, about my job" aria-describedby="basic-addon2" value="{{ sitepreference.site_sub_title }}">
 					</div>
+					<hr>
 					<div class="input-group">
-					  <span class="input-group-addon" id="basic-addon2">Which languages in this article?</span>
-					  <input id="articlelanguagetags" type="text" class="form-control" placeholder="chinese english, etc, separente by space" aria-describedby="basic-addon2">
+					  <span class="input-group-addon" id="basic-addon2">Background Image Url</span>
+					  <input id="sitebackgroundimg" type="text" class="form-control" placeholder="http://xxx.com or upload on the right" aria-describedby="basic-addon2" value="{{ sitepreference.background_image_url }}">
 					</div>
-					<div class="input-group">
-						<span class="input-group-addon" id="basic-addon2">Public or Private article?</span>
-						<select id="articlepublic" class="form-control">
-						  <option value='true'>It can be public</option>
-						  <option value='false'>It is private</option>
-						</select>
-					</div>
+					<hr>
 				</div>
-				{% endif %}
-				<hr>
-				<textarea name="editor1" id="editor1" rows="10" cols="80">
-				   This is my textarea to be replaced with CKEditor.
-	            </textarea>
 				<div>
-					<button class="btn btn-danger btn-block" id="savehtmlbtn">save data</button>
+					<button class="btn btn-danger btn-block" id="savepreferencebtn">save data</button>
 				</div>
-				<div id="editorcontentonthefly" class="blog-edit-demo"></div>
             </div>
-            <div class="col-lg-4 col-md-4">
+            <div class="col-lg-3 col-md-3">
 		        <div id="myuploadzone" class="dropzone">
 		            <div class="dz-message">
 		                Drag/Drop or Click to upload Images
@@ -211,69 +174,29 @@
         });
 	}
 	$('.deletepicturebtn').onClick(deletepicturehandler);
-	
-			
 </script>
-<script src="/ckeditor/ckeditor.js"></script>
-<script>hljs.initHighlightingOnLoad();//load hightlight on code snippet</script>
 <script>
-	var editor1 = CKEDITOR.replace( 'editor1',{
-		codeSnippet_theme:'monokai_sublime',
-		language: 'en'
-	});
-	{% if current_document %}
-	editor1.setData('{{ current_document.html_body|replace("\n", "\\n") }}');
-	{% endif %}
-	editor1.on( 'change', function ( ev ) {
-		document.getElementById( 'editorcontentonthefly' ).innerHTML = editor1.getData();
-	} );
-	
-	
 	// send an article object to server
-	function sendArticleToServer() {
+	function sendPreferenceToServer() {
 		var obj = {}
-		obj['title'] = $('#articletitle').values().articletitle;
-		obj['author'] = $('#articleauthor').values().articleauthor;
+		obj['site_name'] = $('#sitename').values().sitename;
+		obj['profile_pic_url'] = $('#siteprofileimg').values().siteprofileimg;
+		obj['site_title'] = $('#sitetitle').values().sitetitle;
+		obj['site_sub_title'] = $('#sitesubtitle').values().sitesubtitle;
+		obj['background_image_url'] = $('#sitebackgroundimg').values().sitebackgroundimg;
 		
-		var re = /\s+/;
-		obj['tags'] = $('#articletags').values().articletags.trim(/\s/).replace(/,/g,' ').split(re)
-		obj['language_tags'] = $('#articlelanguagetags').values().articlelanguagetags.trim(/\s/).replace(/,/g,' ').split(re);
-
-		if ($('#articlepublic').values().articlepublic == 'true'){
-			obj['public'] = true;
-		} else {
-			obj['public'] = false;
-		}
-		
-		obj['html_body'] = editor1.getData();		
-		new_obj = {}
-		new_obj['article'] = obj
-		objjson =  $.toJSON(new_obj);
-		// console.log(objjson);
-		{% if current_document %}
-		var result = $.request('post', '{{ update_article }}{{ current_document.public_hash_id }}', objjson, {'Content-Type':'application/json'});
-		{% else %}
-		var result = $.request('post', '{{ create_article }}', objjson, {'Content-Type':'application/json'});
-		{% endif %}
+		var result = $.request('post', '{{ edit_site_appearance }}', obj);
 		
         result.then(function success(txt) {
-			$('#savehtmlbtn').set('innerHTML', 'saving... wait to preview...');
-			$('#savehtmlbtn').set('@class', 'btn btn-success btn-block');
-
-			try {
-                var my_json_obj = $.parseJSON(txt);
-				setTimeout(function(){ window.location = '{{ view_blog }}' + my_json_obj['public_hash_id']; }, 3000); //wait 3 seconds to jump to see blog.
-				
-            }
-            catch(err) {
-                alert('wrong json');
-            }
+			$('#savepreferencebtn').set('innerHTML', 'saving... wait to preview...');
+			$('#savepreferencebtn').set('@class', 'btn btn-success btn-block');
+			setTimeout(function(){ window.location = '/'; }, 3000); //wait 3 seconds to jump to see front page.
         },
         function error(status, statusText, responseText) {
             alert("Error accessing service." + responseText + statusText);
         });
 	}
 	
-	$('#savehtmlbtn').onClick(sendArticleToServer);
+	$('#savepreferencebtn').onClick(sendPreferenceToServer);
 </script>
 {% endblock %}

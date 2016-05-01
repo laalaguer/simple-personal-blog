@@ -20,35 +20,85 @@ handlers:
 - url: /ckeditor
   static_dir: ckeditor
 
+# search article by tags, on the backend directly, not used in this app currently
 - url: /tags
   script: article_app.app
-
+  login: admin
+  auth_fail_action: unauthorized
+    
+# search article by tags, on the backend directly, not used in this app currently
 - url: /language_tags
   script: article_app.app
-
+  login: admin
+  auth_fail_action: unauthorized
+  
+# search article by tags, on the backend directly, not used in this app currently
 - url: /search_article
   script: article_app.app
+  login: admin
+  auth_fail_action: unauthorized
 
+# create or list article on the backend directly [private], used as 'create' in this app
 - url: /article
   script: article_app.app
-  login: admin
+  login: required
+  auth_fail_action: unauthorized
 
+# get/update/delete article on the backend directly [private], used as 'delete' and 'put' in this app
 - url: /article/.*
   script: article_app.app
-  login: admin
+  login: required
+  auth_fail_action: unauthorized
 
+# view photo on the backend directly [public]
 - url: /picture/view_photo/.*
   script: picture_app.app
 
+# store the file final on the server [google app engine private]
+- url: /picture/blob_store_final
+  script: picture_app.app
+  login: admin # so only from google app engine inside can access this url, read https://cloud.google.com/appengine/docs/python/config/appref#handlers_element
+# list, delete, update, upload pictures [privte]
+- url: /picture/pre_receive
+  script: picture_app.app
+  login: required
+  auth_fail_action: unauthorized
+
+- url: /picture/refresh_url
+  script: picture_app.app
+  login: required
+  auth_fail_action: unauthorized
+
+- url: /picture/delete_by_hash/.*
+  script: picture_app.app
+  login: required
+  auth_fail_action: unauthorized
+
+
+# the rest url now not opened, so remain to admin login
 - url: /picture/.*
   script: picture_app.app
   login: admin
-  
+  auth_fail_action: unauthorized
+# not used in this app currently
+- url: /user/.*
+  script: user_app.app
+  login: admin
+  auth_fail_action: unauthorized
 
+# get the client interface of editing blog and upload pictures [private]
 - url: /edit_blog
   script: main.app
-  login: admin
+  login: required
+  auth_fail_action: unauthorized
 
+# get the client interface of editing blog and upload pictures [private]
+- url: /update_blog/.*
+  script: main.app
+  login: required
+  auth_fail_action: unauthorized
+
+# protect yourself, now open to the public [public]
 - url: .*
   script: main.app
 

@@ -19,6 +19,19 @@ indexes:
 
 - kind: Article
   properties:
+  - name: public
+  - name: add_date
+    direction: desc
+
+- kind: Article
+  properties:
+  - name: public
+  - name: tags
+  - name: add_date
+    direction: desc
+
+- kind: Article
+  properties:
   - name: public_hash_id
   - name: add_date
     direction: desc
@@ -26,6 +39,12 @@ indexes:
 - kind: Article
   properties:
   - name: tags
+  - name: add_date
+    direction: desc
+
+- kind: ProcessedImages
+  properties:
+  - name: public
   - name: add_date
     direction: desc
 

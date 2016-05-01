@@ -9,7 +9,7 @@
 #}
 {% extends "motherplate.html" %}
 {% block  html_language %} {{ super() }} {% endblock %}
-{% block  html_title %} {{ article.title }} - Simple Personal Blog {% endblock %}
+{% block  html_title %} {{ article.title }} {% endblock %}
 {% block  html_head %} {{ super() }}  {% endblock %}
 {% block  html_navigation %} {{ super() }} {% endblock %}
 {% block  html_pageheader_title %} 
@@ -23,7 +23,7 @@
 		{% endif %}
     </span>
 {% endblock %}
-{% block  html_navigation_links %}  {% endblock %}
+{% block  html_navigation_links %} {{ super() }} {% endblock %}
 {% block  html_navigation_search_form %} {{ super() }} {% endblock %}
 {% block  html_pageheader_img %} {{ super() }} {% endblock %}
 {% block  html_maincontent %}

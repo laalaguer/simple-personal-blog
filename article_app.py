@@ -2,6 +2,7 @@ import webapp2
 import os
 import jinja2
 import article.handlers
+import blogadmins
 
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
@@ -9,6 +10,7 @@ jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.di
 config = {}
 config['jinja2_env'] = jinja_environment
 config['article_single_service'] = '/article/'
+config['blog_admins'] = blogadmins.blogadmins
 
 app = webapp2.WSGIApplication(routes=[
 	# create article, or list all the articles , [private to admin]

@@ -9,7 +9,7 @@ import time
 from cStringIO import StringIO
 from PIL import Image as PILImage
 from PIL import ImageOps as PILImageOps
-from util import MyEncoder
+from util import MyEncoder,UserDetector
 
 class ServeBlobHandler(blobstore_handlers.BlobstoreDownloadHandler):
     ''' Serve the images to the public '''
@@ -19,11 +19,12 @@ class ServeBlobHandler(blobstore_handlers.BlobstoreDownloadHandler):
         else:
             self.send_blob(photo_key)
 
-class RefreshUploadUrlHandler(webapp2.RequestHandler):
+class RefreshUploadUrlHandler(webapp2.RequestHandler,UserDetector):
     ''' get a refresh uploading url where user can upload a picture
     You can use it inside a <form action="">, or , from a javascript ajax
     Return: the uploading url
     '''
+    @UserDetector.wrapper_if_blog_admin
     def get(self):
         # Upload of an image url
         upload_url = blobstore.create_upload_url(self.app.config['blob_process'])
@@ -52,7 +53,7 @@ class DropzoneExampleHandler(webapp2.RequestHandler):
         self.response.out.write(template.render(d)) # render complete
 
 
-class ImagePreProcessHandler(blobstore_handlers.BlobstoreUploadHandler):
+class ImagePreProcessHandler(blobstore_handlers.BlobstoreUploadHandler,UserDetector):
     ''' Gets an image and transform it into different scale using GAE Image Service.Then call another handler to handle it'''
     @classmethod
     def encode_multipart_formdata(cls, fields, files, mimetype='image/jpeg'):
@@ -96,8 +97,15 @@ class ImagePreProcessHandler(blobstore_handlers.BlobstoreUploadHandler):
 
         if response.status_code >= 299:
             raise Exception('Not an Image')
-
+    
     def post(self):
+        if not self.user_is_blog_admin():
+            self.error(401)
+            self.response.out.write('Unauthorized, sorry')
+            # delete the original file uploaded to blobstore,all of them
+            [blobstore.delete(each.key()) for each in self.get_uploads('file')]
+            return
+            
         # get all the uploaded file info
         myfile = self.get_uploads('file')[0] # this is a blob key info
         
@@ -209,11 +217,11 @@ class ImagePreProcessHandler(blobstore_handlers.BlobstoreUploadHandler):
 
         # 3. write the picture to blob, again
         content_type, body = ImagePreProcessHandler.encode_multipart_formdata(
-          [], args_list, content_type_str)
+          [('secret_store_key', self.app.config['blob_store_secret'])], args_list, content_type_str)
         #4. upload to the image storage handler
         #when success, store a DB storage object that holds these images
         response2 = urlfetch.fetch(
-          url=blobstore.create_upload_url(self.app.config['blob_store_final']),
+          url=blobstore.create_upload_url(self.app.config['blob_store_final']), # this is a random url, so no easy spoof from hacker
           payload=body,
           method=urlfetch.POST,
           headers={'Content-Type': content_type},
@@ -248,6 +256,11 @@ class ImagePreProcessHandler(blobstore_handlers.BlobstoreUploadHandler):
             self.response.out.write(json.dumps(response2_loaded_object,cls=MyEncoder,ensure_ascii=False,indent=2, sort_keys=True).encode('utf-8'))
             # delete the original file uploaded to blobstore,all of them
             [blobstore.delete(each.key()) for each in self.get_uploads('file')]
+        else:
+            self.error(404)
+            self.response.out.write('Something Wrong on backend, sorry')
+            # delete the original file uploaded to blobstore,all of them
+            [blobstore.delete(each.key()) for each in self.get_uploads('file')]
              
 
 class ImageStoreHandler(blobstore_handlers.BlobstoreUploadHandler):
@@ -262,6 +275,12 @@ class ImageStoreHandler(blobstore_handlers.BlobstoreUploadHandler):
         }
     '''
     def post(self):
+        secret_store_key = self.request.get('secret_store_key')
+        if secret_store_key != self.app.config['blob_store_secret']:
+            [blobstore.delete(each.key()) for each in self.get_uploads('file')]
+            self.error(404)
+            return
+            
         raw_list = self.get_uploads('file') # get all the files
         d = {}
         d['stored'] = []
@@ -275,7 +294,8 @@ class ImageStoreHandler(blobstore_handlers.BlobstoreUploadHandler):
         self.response.content_type = 'application/json'
         self.response.out.write(json.dumps(d,cls=MyEncoder,ensure_ascii=False,indent=2, sort_keys=True).encode('utf-8'))
 
-class DeleteProcessedImageHandler(webapp2.RequestHandler):
+class DeleteProcessedImageHandler(webapp2.RequestHandler,UserDetector):
+    @UserDetector.wrapper_if_blog_admin
     def get(self, public_hash_id):
         # prepare the response type
         self.response.charset = 'utf-8'
@@ -364,12 +384,13 @@ class ListProcessedImageHandler(webapp2.RequestHandler):
             return
 
 
-class UpdateProcessedImageDescriptionHandler(webapp2.RequestHandler):
+class UpdateProcessedImageDescriptionHandler(webapp2.RequestHandler,UserDetector):
     '''update the image description
         Return {
             'success': true/false,
         }
     '''
+    @UserDetector.wrapper_if_blog_admin
     def post(self, public_hash_id):
         description = self.request.get('description',None)
         public = self.request.get('public',None)

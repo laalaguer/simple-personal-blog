@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello {{ user_nickname }}</title>
+    </head>
+    <body>
+    	<h1>Hello {{ user_nickname }}: {{ user_email }}</h1>
+    	{% if user_is_admin %}
+    		<p>You are blog admin</p>
+    	{% endif %}
+		
+    	{% if user_is_allowed_author %}
+    		<p> You are allowed author</p>
+    	{% endif %}
+
+    	{% if user_logged_in %}
+    		<p><a href="{{ logout_url }}">You have logged in, Logout here</a></p>
+    	{% else %}
+    		<p><a href="{{ login_url }}">You have not logged in, Login here</a></p>
+    	{% endif %}
+    </body>
+</html>

@@ -2,6 +2,7 @@
 	view_blog - web page serivce point
 	search_blog - search page serivce point
 	list_blog - the current page location service point
+	update_blog - if you want to update a single blog
 	title_part - part of the listing title
 	articles - all the articles that can show up in this post
 	allow_edit - flag that can let user get an edit page
@@ -14,7 +15,7 @@
 #}
 {% extends "motherplate.html" %}
 {% block  html_language %} {{ super() }} {% endblock %}
-{% block  html_title %} {{ title_part }} - Simple Personal Blog {% endblock %}
+{% block  html_title %} {{ title_part }}{% endblock %}
 {% block  html_head %} {{ super() }}  {% endblock %}
 {% block  html_navigation %} {{ super() }} {% endblock %}
 {% block  html_pageheader_title %} 
@@ -35,6 +36,13 @@
 		                    <a href="{{ view_blog }}{{ each.public_hash_id }}">
 		                        <h2 class="post-title">
 									{{ each.title }}
+									{% if is_admin %}
+										{% if each.public %}
+									<span class="badge">public</span>
+										{% else %}
+									<span class="badge">private</span>
+										{% endif %}
+									{% endif %}
 		                        </h2>
 		                        <h3 class="post-subtitle">
 		                            {% for eachtag in each.tags %}
@@ -42,7 +50,13 @@
 									{% endfor %}
 		                        </h3>
 		                    </a>
-		                    <p class="post-meta">Posted by <a href="#">{{ each.author }}</a> on {{ each.last_touch_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+		                    <p class="post-meta">Posted by <a href="#">{{ each.author }}</a> on {{ each.last_touch_date.strftime('%Y-%m-%d %H:%M:%S') }}
+								{% if is_admin %}
+									<a href="{{ update_blog }}{{ each.public_hash_id }}" class="btn btn-info pull-right">re-edit</a>
+									<a href="{{ delete_blog }}{{ each.public_hash_id }}" class="btn btn-danger pull-right deleteblogbtn">delete</a>
+								{% endif %}
+							</p>
+							
 		                </div>
 		                <hr>
 					{% endfor %}
@@ -66,4 +80,22 @@
 		</div>
 {% endblock %}
 {% block  html_footer %} {{ super() }} {% endblock %}
-{% block  html_js %}{{ super() }}{% endblock %}
+{% block  html_js %}
+{% if is_admin %}
+	<script>
+	var MINI = require('minified');
+	var _=MINI._, $=MINI.$, $$=MINI.$$, EE=MINI.EE, HTML=MINI.HTML;
+	
+	// delete picture that is already on the server
+	function deletebloghandler(event, index){
+        // we request for a new url for uploading next
+        var result = $.request('delete', event.target.getAttribute("href")); //<a>
+        result.then(function success(txt) {
+			event.target.parentElement.parentElement.innerHTML = '<h2 class="post-title" style="color: red;">deleted</h2>';
+        });
+	}
+	$('.deleteblogbtn').onClick(deletebloghandler);
+	
+	</script>
+{% endif %}
+{% endblock %}

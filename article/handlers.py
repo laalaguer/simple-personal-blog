@@ -4,10 +4,11 @@
 import webapp2
 import json
 import db
-from util import MyEncoder
+from util import MyEncoder, UserDetector
 
 # the design priciples, you can see the README.md document in the package folder
-class CreateArticleHandler(webapp2.RequestHandler):
+class CreateArticleHandler(webapp2.RequestHandler, UserDetector):
+    @UserDetector.wrapper_if_blog_admin
     def post(self):
         ''' a post handler, receives a json and create an article '''
         # prepare the response type
@@ -50,7 +51,8 @@ class CreateArticleHandler(webapp2.RequestHandler):
             d['fail_reason'] = 'Exception: %s, Message: %s' % (type(ex).__name__ , str(ex))
             self.response.out.write(json.dumps(d,cls=MyEncoder,ensure_ascii=False,indent=2, sort_keys=True).encode('utf-8'))
             return
-
+    
+    @UserDetector.wrapper_if_blog_admin
     def get(self):
         ''' get all the articles, or part of it, choose by offset, amount and chrono'''
         # prepare the response type
@@ -95,8 +97,9 @@ class CreateArticleHandler(webapp2.RequestHandler):
             return
 
 
-class OperateArticleHandler(webapp2.RequestHandler):
+class OperateArticleHandler(webapp2.RequestHandler, UserDetector):
     ''' GET, PUT, DELETE handler, modify the article '''
+    @UserDetector.wrapper_if_blog_admin
     def get(self, hash_id):
         ''' send back user a json-represented article '''
         # prepare the response type
@@ -122,8 +125,12 @@ class OperateArticleHandler(webapp2.RequestHandler):
             d['fail_reason'] = 'Exception: %s, Message: %s' % (type(ex).__name__ , str(ex))
             self.response.out.write(json.dumps(d,cls=MyEncoder,ensure_ascii=False,indent=2, sort_keys=True).encode('utf-8'))
             return
-
-
+    
+    @UserDetector.wrapper_if_blog_admin
+    def post(self, hash_id):
+        self.put(hash_id)
+    
+    @UserDetector.wrapper_if_blog_admin
     def put(self, hash_id):
         ''' modify a field, or fields of an artile '''
         # prepare the response type
@@ -169,6 +176,7 @@ class OperateArticleHandler(webapp2.RequestHandler):
                 articles[0].put()
                 print 'after put, tags',articles[0].tags
                 d['success'] = True
+                d['public_hash_id'] = articles[0].public_hash_id
             else:
                 d['success'] = False
                 d['fail_reason'] = 'article not found'
@@ -182,6 +190,7 @@ class OperateArticleHandler(webapp2.RequestHandler):
             self.response.out.write(json.dumps(d,cls=MyEncoder,ensure_ascii=False,indent=2, sort_keys=True).encode('utf-8'))
             return
     
+    @UserDetector.wrapper_if_blog_admin
     def delete(self, hash_id):
         ''' delete an article '''
         # prepare the response type
@@ -207,7 +216,8 @@ class OperateArticleHandler(webapp2.RequestHandler):
             return
 
 
-class SearchArticleByTagHandler(webapp2.RequestHandler):
+class SearchArticleByTagHandler(webapp2.RequestHandler, UserDetector):
+    @UserDetector.wrapper_if_blog_admin
     def get(self):
         wanted_tag = self.request.get('tag', None)
         wanted_language_tag = self.request.get('language_tag', None)
@@ -246,7 +256,8 @@ class SearchArticleByTagHandler(webapp2.RequestHandler):
             self.response.out.write(json.dumps(d,cls=MyEncoder,ensure_ascii=False,indent=2, sort_keys=True).encode('utf-8'))
             return
 
-class ListTagsHandler(webapp2.RequestHandler):
+class ListTagsHandler(webapp2.RequestHandler, UserDetector):
+    @UserDetector.wrapper_if_logged_in
     def get(self):
         # prepare the response type
         self.response.charset = 'utf-8'
@@ -258,7 +269,8 @@ class ListTagsHandler(webapp2.RequestHandler):
         d['count'] = len(hits[0].tags)
         self.response.out.write(json.dumps(d,cls=MyEncoder,ensure_ascii=False,indent=2, sort_keys=True).encode('utf-8'))
 
-class ListLanguageTagsHandler(webapp2.RequestHandler):
+class ListLanguageTagsHandler(webapp2.RequestHandler, UserDetector):
+    @UserDetector.wrapper_if_logged_in
     def get(self):
         # prepare the response type
         self.response.charset = 'utf-8'

@@ -2,6 +2,7 @@ import webapp2
 import os
 import jinja2
 import picture.handlers
+import blogadmins
 
 static_path = '/'.join([os.path.dirname(__file__),'html'])
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(static_path))
@@ -15,6 +16,8 @@ config['blob_serving_url'] = r'/picture/view_photo/'
 config['blob_store_final'] = '/picture/blob_store_final'
 config['refresh_url'] = '/picture/refresh_url'
 config['delete_image_collection'] = '/picture/delete_by_hash/'
+config['blog_admins'] = blogadmins.blogadmins
+config['blob_store_secret'] = 'MY_SECRET_STORE_KEY'
 
 app = webapp2.WSGIApplication(routes=[
 	# private to admin

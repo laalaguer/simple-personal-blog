@@ -5,13 +5,13 @@
 #}
 {% extends "motherplate.html" %}
 {% block  html_language %} {{ super() }} {% endblock %}
-{% block  html_title %} {{ title_part }} - Simple Personal Blog {% endblock %}
+{% block  html_title %} {{ title_part }} {% endblock %}
 {% block  html_head %} {{ super() }}  {% endblock %}
 {% block  html_navigation %} {{ super() }} {% endblock %}
 {% block  html_pageheader_title %} 
-    <h1><img src="/img/goodprofilepic.jpg" class="img-circle img-header">{{ title_part }}</h1>
+    <h1><img src="{{ sitepreference.profile_pic_url }}" class="img-circle img-header">{{ sitepreference.site_title }}</h1>
     <hr class="small">
-    <span class="subheading">A Picture Blog Theme Based on Start Bootstrap - Clean Blog</span>
+    <span class="subheading">{{ sitepreference.site_sub_title }}</span>
 {% endblock %}
 {% block  html_navigation_links %} {{ super() }} {% endblock %}
 {% block  html_navigation_search_form %} {{ super() }} {% endblock %}

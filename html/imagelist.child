@@ -2,10 +2,11 @@
 	title_part - title of page
 	blob_serving_url - the pictures comes out here
 	list_image - service point of listing images
+	delete_image_collection - delete image colletion handler
 #}
 {% extends "motherplate.html" %}
 {% block  html_language %} {{ super() }} {% endblock %}
-{% block  html_title %} {{ title_part }} - Simple Personal Blog {% endblock %}
+{% block  html_title %} {{ title_part }} {% endblock %}
 {% block  html_head %}
 	<!-- Custom CSS -->
 	<link href="css/figure-hover.css" rel="stylesheet">
@@ -25,13 +26,18 @@
 					{% if pictures %}
 						{% for each in pictures %}
 							<div class="col-lg-4 col-md-4 col-sm-4">
-								<a class="thumbnail myimagepreview " href="{{ blob_serving_url }}{{ each.blob_1600 }}"> <!-- hovereffect -->
+								<a class="thumbnail myimagepreview" href="{{ blob_serving_url }}{{ each.blob_1600 }}" id="{{ each.public_hash_id }}"> <!-- hovereffect -->
 									<img src="{{ blob_serving_url }}{{ each.blob_512 }}"> <!-- class="img-circle img-portfolio-preview" -->
 									<div class="overlay" style="display: none">
 										<h2>{{ each.description }}</h2>
 										<p>{{ each.last_touch_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
 									</div>
 								</a>
+								{% if is_admin %}
+								<div class="caption">
+							        <p><a href="{{ delete_image_collection }}{{ each.public_hash_id }}" class="btn btn-danger deletepicturebtn">delete</a></p>
+								</div>
+								{% endif %}
 							</div>
 						{% endfor %}
 					{% endif %}
@@ -60,4 +66,20 @@
 {% endblock %}
 {% block  html_footer %} {{ super() }} {% endblock %}
 {% block  html_js %}
+	<script>
+	var MINI = require('minified');
+	var _=MINI._, $=MINI.$, $$=MINI.$$, EE=MINI.EE, HTML=MINI.HTML;
+	
+	// delete picture that is already on the server
+	function deletepicturehandler(event, index){
+        // we request for a new url for uploading next
+        var result = $.request('get', event.target.getAttribute("href")); //<a>
+        result.then(function success(txt) {
+			
+			event.target.parentElement.parentElement.parentElement.getElementsByTagName("a")[0].getElementsByTagName("img")[0].setAttribute("src","/img/deleted.png");
+			event.target.parentElement.innerHTML = '<h3 style="color: red;">deleted</h3>';
+        });
+	}
+	$('.deletepicturebtn').onClick(deletepicturehandler);
+	</script>
 {% endblock %}

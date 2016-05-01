@@ -1,0 +1,1 @@
+blogadmins = ['test@example.com']
