@@ -1,1 +1,1 @@
-blogadmins = ['test@example.com']
+blogadmins = ['test@example.com','laalaguer@gmail.com']

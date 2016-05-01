@@ -69,6 +69,7 @@ class Article(ndb.Model):
     tags = ndb.StringProperty(repeated=True) # tags, keywords of an article, a list
     language_tags = ndb.StringProperty(repeated=True) # languages of an article, a list.
     public = ndb.BooleanProperty(default=True) # if this article is private or not
+    importance = ndb.IntegerProperty(default=0) # if this article shall be on top of all the blogs, like really important blogs
     
     public_hash_id = ndb.StringProperty(default='') # a random job id, for marking purpose.
     last_touch_date = ndb.DateTimeProperty(auto_now=True)
@@ -99,7 +100,11 @@ class Article(ndb.Model):
 
     @classmethod
     def query_whole(cls, allowed_user=True):
-        return cls.make_query(allowed_user).order(-cls.add_date).fetch(amount)
+        return cls.make_query(allowed_user).order(-cls.add_date).fetch()
+    
+    @classmethod
+    def query_by_importance(cls, allowed_user=True, amount=10):
+        return cls.make_query(allowed_user).order(-cls.importance).order(-cls.add_date).fetch(amount)
     
     @classmethod
     def query_recently(cls, allowed_user=True, amount=10):

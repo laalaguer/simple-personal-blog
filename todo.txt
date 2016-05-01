@@ -1,4 +1,10 @@
 1.[done] search bar not working
 2.[done] separate blog admin and google app engine admin.
-3. change profile picture, background picture,site big title, site subtitle, site name on the left.
+3.[done]  change profile picture, background picture,site big title, site subtitle, site name on the left.
 4. picture add comments and update comments on the picture itself.
+
+
+tochange
+1. app.yaml the app id
+2. picture_app.py config['blob_store_secret'] = 'MY_SECRET_STORE_KEY'
+3. blogadmins.py blogadmins = ['test@example.com']

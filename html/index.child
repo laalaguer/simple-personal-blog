@@ -27,6 +27,9 @@
 	                    <a href="{{ view_blog }}{{ each.public_hash_id }}">
 	                        <h2 class="post-title">
 								{{ each.title }}
+								{% if each.importance > 0 %}
+								<span class="badge">Top</span>
+							    {% endif %}
 	                        </h2>
 	                        <h3 class="post-subtitle">
 	                            {% for eachtag in each.tags %}

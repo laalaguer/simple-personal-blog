@@ -27,8 +27,9 @@ class CreateArticleHandler(webapp2.RequestHandler, UserDetector):
                 tags = [x.lower() for x in article['tags']] # a list
                 language_tags = [x.lower() for x in article['language_tags']] # a list
                 public = article['public']
+                importance = article['importance']
                 # store article
-                item = db.Article(title=title,author=author,html_body=html_body,tags=tags,language_tags=language_tags,public=public)
+                item = db.Article(title=title,author=author,html_body=html_body,tags=tags,language_tags=language_tags,public=public,importance=importance)
                 item.put()
                 # store tags
                 db.ArticleTag.add_tags(tags)

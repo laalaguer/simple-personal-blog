@@ -12,6 +12,20 @@ indexes:
 
 - kind: Article
   properties:
+  - name: add_date
+    direction: desc
+  - name: importance
+    direction: desc
+
+- kind: Article
+  properties:
+  - name: importance
+    direction: desc
+  - name: add_date
+    direction: desc
+
+- kind: Article
+  properties:
   - name: language_tags
   - name: tags
   - name: add_date
@@ -20,6 +34,14 @@ indexes:
 - kind: Article
   properties:
   - name: public
+  - name: add_date
+    direction: desc
+
+- kind: Article
+  properties:
+  - name: public
+  - name: importance
+    direction: desc
   - name: add_date
     direction: desc
 

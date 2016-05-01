@@ -2,6 +2,8 @@
 	come_from - where this page is reffered
 	search_blog - search page serivce point
 	view_blog - web page serivce point
+	update_blog - update blog place
+	delete_blog - delete blog place
 	article - object
 	tags - all the tags in this site.
 	related - all the articles has the same tag in this article.
@@ -36,8 +38,12 @@
 					  <li class="active">{{ article.title }}</li>
 					</ol>
 					<h6 class="pull-right"><em>Written by - {{ article.author }}, Last updated: {{ article.last_touch_date.strftime('%Y-%m-%d %H:%M:%S') }}</em></h6>
+					{% if is_admin %}
+						<a href="{{ update_blog }}{{ article.public_hash_id }}" class="btn btn-info">re-edit</a>
+						<a href="{{ delete_blog }}{{ article.public_hash_id }}" class="btn btn-danger deleteblogbtn">delete</a>
+					{% endif %}
 					<br>
-                    {{ article.html_body }}
+                    {{ article.html_body.replace('&quot;','"') }}
 				</div>
 				<div class="col-lg-4 col-md-4">
 					<div class="">
@@ -80,5 +86,22 @@
         </div>
 {% endblock %}
 {% block  html_footer %} {{ super() }} {% endblock %}
-{% block  html_js %} {{ super() }}
+{% block  html_js %}
+	{% if is_admin %}
+		<script>
+		var MINI = require('minified');
+		var _=MINI._, $=MINI.$, $$=MINI.$$, EE=MINI.EE, HTML=MINI.HTML;
+	
+		// delete picture that is already on the server
+		function deletebloghandler(event, index){
+	        // we request for a new url for uploading next
+	        var result = $.request('delete', event.target.getAttribute("href")); //<a>
+	        result.then(function success(txt) {
+				event.target.parentElement.parentElement.innerHTML = '<h2 class="post-title" style="color: red;">deleted</h2>';
+	        });
+		}
+		$('.deleteblogbtn').onClick(deletebloghandler);
+	
+		</script>
+	{% endif %}
 {% endblock %}

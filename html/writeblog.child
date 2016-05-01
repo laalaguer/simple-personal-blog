@@ -54,6 +54,18 @@
 					  {% endif %}
 						</select>
 					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon2">Put on top of Front Page?</span>
+						<select id="articleimportance" class="form-control">
+					  {% if current_document.importance > 0 %}
+						  <option value='0'>Normal article</option>
+						  <option value='1' selected="selected">Put on Top</option>
+					  {% else %}
+						  <option value='0'>Normal article</option>
+						  <option value='1'>Put on Top</option>
+					  {% endif %}
+						</select>
+					</div>
 				</div>
 				{% else %}
 				<div>
@@ -79,6 +91,13 @@
 						<select id="articlepublic" class="form-control">
 						  <option value='true'>It can be public</option>
 						  <option value='false'>It is private</option>
+						</select>
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon2">Put on top of Front Page?</span>
+						<select id="articleimportance" class="form-control">
+						  <option value='0'>Normal article</option>
+						  <option value='1'>Put on Top</option>
 						</select>
 					</div>
 				</div>
@@ -212,17 +231,28 @@
 	}
 	$('.deletepicturebtn').onClick(deletepicturehandler);
 	
-			
+	function setTimerandRefreshUrl(){
+        // we request for a new url for uploading next
+        var result = $.request('get', '{{ refresh_url }}');
+        result.then(function success(txt) {
+            myDropzone.options.url =  txt; // get a new upload url
+			setTimeout(setTimerandRefreshUrl, 300000); //refresh every 5 minutes
+        });
+	}
+	
+	window.onload = setTimerandRefreshUrl;
+	
 </script>
 <script src="/ckeditor/ckeditor.js"></script>
 <script>hljs.initHighlightingOnLoad();//load hightlight on code snippet</script>
 <script>
 	var editor1 = CKEDITOR.replace( 'editor1',{
 		codeSnippet_theme:'monokai_sublime',
-		language: 'en'
+		language: 'en',
+		height : '500px'
 	});
 	{% if current_document %}
-	editor1.setData('{{ current_document.html_body|replace("\n", "\\n") }}');
+	editor1.setData("{{ current_document.html_body|replace("\n", "\\n") }}".replace(/&quot;/g,'"'));
 	{% endif %}
 	editor1.on( 'change', function ( ev ) {
 		document.getElementById( 'editorcontentonthefly' ).innerHTML = editor1.getData();
@@ -245,7 +275,13 @@
 			obj['public'] = false;
 		}
 		
-		obj['html_body'] = editor1.getData();		
+		if ($('#articleimportance').values().articleimportance == '1'){
+			obj['importance'] = 1;
+		} else {
+			obj['importance'] = 0;
+		}
+		
+		obj['html_body'] = editor1.getData().replace(/"/g,'&quot;');		
 		new_obj = {}
 		new_obj['article'] = obj
 		objjson =  $.toJSON(new_obj);
