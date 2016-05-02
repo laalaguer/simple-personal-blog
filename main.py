@@ -12,6 +12,8 @@ from preference import db as MyPreferencedb
 static_path = '/'.join([os.path.dirname(__file__),'html'])
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(static_path))
 
+MY_SECRET_LOGIN_URL = '/secret_login_place' # change this line to your own
+
 # this config is shared accross all the application, so use wisely.
 config = {}
 # default config on the backend, that we use on front end
@@ -382,5 +384,5 @@ app = webapp2.WSGIApplication(routes=[
     webapp2.Route('/list_blog', handler=ListBlogHandler),
     webapp2.Route('/search_blog', handler=SearchBlogHandler),
     webapp2.Route('/list_image', handler=ListImageHandler),
-    webapp2.Route('/secret_login_place', handler=AdminLoginHandler),
+    webapp2.Route(MY_SECRET_LOGIN_URL, handler=AdminLoginHandler),
 ], debug=debug_flag, config=config)
