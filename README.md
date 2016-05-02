@@ -7,9 +7,11 @@ A personal blog, sits on the Google App Engine and `webapp2` framework
 
 ## Features:
 Read the Following Three Articles about what we provide:
-[Tutorial #1](http://simple-personal-blog.appspot.com/view_blog/4e595a50cdaa81293bfff01757a4193a)
-[Tutorial #2](http://simple-personal-blog.appspot.com/view_blog/c5c448bf1770b1aac5c7ff2d25ebaa94)
-[Tutorial #3](http://simple-personal-blog.appspot.com/view_blog/61c4148148c68e7a8308f379159698ba)
+	[Tutorial #1](http://simple-personal-blog.appspot.com/view_blog/4e595a50cdaa81293bfff01757a4193a)
+	[Tutorial #2](http://simple-personal-blog.appspot.com/view_blog/c5c448bf1770b1aac5c7ff2d25ebaa94)
+	[Tutorial #3](http://simple-personal-blog.appspot.com/view_blog/61c4148148c68e7a8308f379159698ba)
+
+In General, once deployed, multiple/single author can write articles, upload images on this blog site.
 
 ## For Developers:
 If you are going to deploy one of your own, please following these steps
