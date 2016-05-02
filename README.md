@@ -2,7 +2,7 @@
 A personal blog, sits on the Google App Engine and `webapp2` framework
 
 ## Demo
-[Demo Site Link](http://simple-personal-blog.appspot.com/)
+[Demo Site Link](http://simple-personal-blog.appspot.com/) [http://simple-personal-blog.appspot.com/](http://simple-personal-blog.appspot.com/)
 ![Work Flow Picture](demopic.jpg)
 
 ## Features:
