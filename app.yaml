@@ -74,6 +74,11 @@ handlers:
   login: required
   auth_fail_action: unauthorized
 
+- url: /picture/update_description/.*
+  script: picture_app.app
+  login: required
+  auth_fail_action: unauthorized
+
 
 # the rest url now not opened, so remain to admin login
 - url: /picture/.*

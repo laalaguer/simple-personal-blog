@@ -429,3 +429,8 @@ dialog {
   border-radius: 6px;
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
 }
+
+.btn-inline {
+	padding: 6px 12px;
+	border-radius: 4px;
+}

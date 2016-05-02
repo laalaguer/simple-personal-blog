@@ -134,20 +134,28 @@
 					  </div>
 					  <div class="media-body">
 						<div class="input-group">
-						  <input type="text" class="form-control" placeholder="256px" aria-describedby="basic-addon2" value="{{ blob_serving_url }}{{ each.blob_256 }}">
-						  <span class="input-group-addon" id="basic-addon2">256px</span>
+						  <input type="text" class="form-control" placeholder="256px" aria-describedby="basic-addon2" value="{{ blob_serving_url }}{{ each.blob_256 }}" id="pic256-{{ each.public_hash_id }}">
+						  <span class="input-group-btn">
+						     <button class="btn btn-default btn-inline copyimgurlbtn" type="button" alt="#pic256-{{ each.public_hash_id }}"><spain class="glyphicon glyphicon-copy" aria-hidden="true"></span>256px</button>
+						  </span>
 						</div>
 						<div class="input-group">
-						  <input type="text" class="form-control" placeholder="512px" aria-describedby="basic-addon2" value="{{ blob_serving_url }}{{ each.blob_512 }}">
-						  <span class="input-group-addon" id="basic-addon2">512px</span>
+						  <input type="text" class="form-control" placeholder="512px" aria-describedby="basic-addon2" value="{{ blob_serving_url }}{{ each.blob_512 }}" id="pic512-{{ each.public_hash_id }}">
+						  <span class="input-group-btn">
+						     <button class="btn btn-default btn-inline copyimgurlbtn" type="button" alt="#pic512-{{ each.public_hash_id }}"><spain class="glyphicon glyphicon-copy" aria-hidden="true"></span>512px</button>
+						  </span>
 						</div>
 						<div class="input-group">
-						  <input type="text" class="form-control" placeholder="800px" aria-describedby="basic-addon2" value="{{ blob_serving_url }}{{ each.blob_800 }}">
-						  <span class="input-group-addon" id="basic-addon2">800px</span>
+						  <input type="text" class="form-control" placeholder="800px" aria-describedby="basic-addon2" value="{{ blob_serving_url }}{{ each.blob_800 }}" id="pic800-{{ each.public_hash_id }}">
+						  <span class="input-group-btn">
+						     <button class="btn btn-default btn-inline copyimgurlbtn" type="button" alt="#pic800-{{ each.public_hash_id }}"><spain class="glyphicon glyphicon-copy" aria-hidden="true"></span>800px</button>
+						  </span>
 						</div>
 						<div class="input-group">
-						  <input type="text" class="form-control" placeholder="1600px" aria-describedby="basic-addon2" value="{{ blob_serving_url }}{{ each.blob_1600 }}">
-						  <span class="input-group-addon" id="basic-addon2">1600px</span>
+						  <input type="text" class="form-control" placeholder="1600px" aria-describedby="basic-addon2" value="{{ blob_serving_url }}{{ each.blob_1600 }}" id="pic1600-{{ each.public_hash_id }}">
+						  <span class="input-group-btn">
+						     <button class="btn btn-default btn-inline copyimgurlbtn" type="button" alt="#pic1600-{{ each.public_hash_id }}"><spain class="glyphicon glyphicon-copy" aria-hidden="true"></span>1600px</button>
+						  </span>
 						</div>
 					  </div>
 	                {% endfor %}
@@ -311,5 +319,20 @@
 	}
 	
 	$('#savehtmlbtn').onClick(sendArticleToServer);
+</script>
+<script>
+	function copyimageurl(event, index){
+		// alert(event.target.getAttribute('alt'));
+		m_target = $(''+event.target.getAttribute('alt'))[0];
+		m_target.select();
+		try {
+		    var successful = document.execCommand('copy');
+		    var msg = successful ? 'successful' : 'unsuccessful';
+		    console.log('Copying text command was ' + msg);
+		} catch (err) {
+		    console.log('Oops, unable to copy');
+	    }
+	}
+	$('.copyimgurlbtn').onClick(copyimageurl);
 </script>
 {% endblock %}

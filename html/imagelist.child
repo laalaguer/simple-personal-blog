@@ -26,14 +26,21 @@
 					{% if pictures %}
 						{% for each in pictures %}
 							<div class="col-lg-4 col-md-4 col-sm-4">
-								<a class="thumbnail myimagepreview" href="{{ blob_serving_url }}{{ each.blob_1600 }}" id="{{ each.public_hash_id }}"> <!-- hovereffect -->
+								<a class="thumbnail myimagepreview hovereffect" href="{{ blob_serving_url }}{{ each.blob_1600 }}" id="{{ each.public_hash_id }}"> <!-- hovereffect -->
 									<img src="{{ blob_serving_url }}{{ each.blob_512 }}"> <!-- class="img-circle img-portfolio-preview" -->
-									<div class="overlay" style="display: none">
-										<h2>{{ each.description }}</h2>
-										<p>{{ each.last_touch_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+									<div class="overlay" style="">
+										<h2 id="h2-{{ each.public_hash_id }}">{{ each.description }}</h2>
+										<p>{{ each.last_touch_date.strftime('%Y-%m-%d') }}</p>
 									</div>
 								</a>
 								{% if is_admin %}
+								<div class="input-group">
+								  	<input id="pic-{{ each.public_hash_id }}" type="text" class="form-control" placeholder="Description...?" aria-describedby="basic-addon2" value="{{ each.description }}">
+									<span class="input-group-btn">
+									   <button class="btn btn-default btn-inline savepicdescriptionbtn" type="button" alt="{{ each.public_hash_id }}"><spain class="glyphicon glyphicon-check" aria-hidden="true"></span></button>
+									</span>
+								</div>
+								
 								<div class="caption">
 							        <p><a href="{{ delete_image_collection }}{{ each.public_hash_id }}" class="btn btn-danger deletepicturebtn">delete</a></p>
 								</div>
@@ -81,5 +88,19 @@
         });
 	}
 	$('.deletepicturebtn').onClick(deletepicturehandler);
+	
+	// save picture description onto the server
+	function sendpicdescrptionhandler(event, index){
+		picid = event.target.getAttribute('alt');
+		console.log(picid);
+		des = event.target.parentElement.parentElement.getElementsByTagName("input")[0].value;
+		console.log(des);
+        var result = $.request('post', '/picture/update_description/'+picid, {'description':des});
+        result.then(function success(txt) {
+			$('#h2-'+picid)[0].innerText = des;
+			alert('Success! Changed to: ' + des);
+        });
+	}
+	$('.savepicdescriptionbtn').onClick(sendpicdescrptionhandler);
 	</script>
 {% endblock %}
