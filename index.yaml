@@ -66,7 +66,22 @@ indexes:
 
 - kind: ProcessedImages
   properties:
+  - name: importance
+    direction: desc
+  - name: add_date
+    direction: desc
+
+- kind: ProcessedImages
+  properties:
   - name: public
+  - name: add_date
+    direction: desc
+
+- kind: ProcessedImages
+  properties:
+  - name: public
+  - name: importance
+    direction: desc
   - name: add_date
     direction: desc
 

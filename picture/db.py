@@ -15,6 +15,7 @@ class ProcessedImages(ndb.Model):
     description = ndb.StringProperty(default='') # description of the picture, default is none
     tags = ndb.StringProperty(repeated=True) # the tokenized description of this picture
     public = ndb.BooleanProperty(default=True) # if this image is public accessable
+    importance = ndb.IntegerProperty(default=0) # if this article shall be on top of all the blogs, like really important blogs
     
     last_touch_date = ndb.DateTimeProperty(auto_now=True)
     add_date = ndb.DateTimeProperty(auto_now_add=True)
@@ -39,6 +40,10 @@ class ProcessedImages(ndb.Model):
         else:
             return cls.query(cls.public == True)
 
+    @classmethod
+    def query_by_importance(cls, allowed_user=True, amount=10):
+        return cls.make_query(allowed_user).order(-cls.importance).order(-cls.add_date).fetch(amount)
+        
     @classmethod
     def query_by_hash(cls, hash_value, allowed_user=True):
         return cls.make_query(allowed_user).filter(cls.public_hash_id == hash_value).order(-cls.add_date).fetch()
@@ -89,7 +94,7 @@ def delete_processed_image(hash_id):
 
     return length # return the deleted entries numbers
 
-def update_processed_image(hash_id, description=None, public=None):
+def update_processed_image(hash_id, description=None, public=None, importance=None):
     ''' update description and publicity flag of an image '''
     existing = ProcessedImages.query_by_hash(hash_id)
     length = len(existing)
@@ -98,5 +103,7 @@ def update_processed_image(hash_id, description=None, public=None):
             each.description = description
         if (public is True) or (public is False):
             each.public = public
+        if importance != None:
+            each.importance = importance
         each.put()
     return length

@@ -334,7 +334,7 @@ class MainHandler(webapp2.RequestHandler,UserDetector):
         d['title_part'] = 'Home'
         d['blob_serving_url'] = self.app.config['blob_serving_url']
         # image processed, that already on the server
-        d['pictures'] = MyImagedb.ProcessedImages.query_by_page(0,12,allowed_user=d['is_admin']) # a list returned
+        d['pictures'] = MyImagedb.ProcessedImages.query_by_importance(allowed_user=d['is_admin'],amount=12) # a list returned
         hits = MyArticledb.Article.query_by_importance(allowed_user=d['is_admin'],amount=10)
         d['articles'] =  []
         for each in hits:
@@ -355,7 +355,7 @@ class AdminLoginHandler(BaseHandler):
         if self.user_is_blog_admin() is None:
             d['user_is_admin'] = False
             d['user_logged_in'] = False
-            d['login_url'] = self.get_login_url()
+            d['login_url'] = self.get_login_url('/')
         elif self.user_is_blog_admin() is False:
             d['user_is_admin'] = False
             d['user_is_allowed_author'] = self.user_is_allowed_author()

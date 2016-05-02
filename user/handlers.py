@@ -101,11 +101,11 @@ class BaseHandler(webapp2.RequestHandler):
         ''' add an allowed author into db'''
         db.add_blog_author(email)
 
-    def get_login_url(self):
-        return users.create_login_url(dest_url=self.request.url)
+    def get_login_url(self,dest=None):
+        return users.create_login_url(dest_url=dest if dest else self.request.url)
 
-    def get_logout_url(self):
-        return users.create_logout_url(dest_url=self.request.url)
+    def get_logout_url(self,dest=None):
+        return users.create_logout_url(dest_url=dest if dest else self.request.url)
 
     def get_user_nickname_email(self):
         if self.user_is_logged_in:

@@ -41,6 +41,22 @@
 									</span>
 								</div>
 								
+								<div class="input-group">
+									<span class="input-group-addon" id="basic-addon2">Put on top?</span>
+									<select id="imageimportance" class="form-control">
+								  {% if each.importance > 0 %}
+									  <option value='0'>Normal Image</option>
+									  <option value='1' selected="selected">Put on Top</option>
+								  {% else %}
+									  <option value='0'>Normal Image</option>
+									  <option value='1'>Put on Top</option>
+								  {% endif %}
+									</select>
+									<span class="input-group-btn">
+									   <button class="btn btn-default btn-inline savepicimportancebtn" type="button" alt="{{ each.public_hash_id }}"><spain class="glyphicon glyphicon-check" aria-hidden="true"></span></button>
+									</span>
+								</div>
+								
 								<div class="caption">
 							        <p><a href="{{ delete_image_collection }}{{ each.public_hash_id }}" class="btn btn-danger deletepicturebtn">delete</a></p>
 								</div>
@@ -80,12 +96,15 @@
 	// delete picture that is already on the server
 	function deletepicturehandler(event, index){
         // we request for a new url for uploading next
-        var result = $.request('get', event.target.getAttribute("href")); //<a>
-        result.then(function success(txt) {
-			
-			event.target.parentElement.parentElement.parentElement.getElementsByTagName("a")[0].getElementsByTagName("img")[0].setAttribute("src","/img/deleted.png");
-			event.target.parentElement.innerHTML = '<h3 style="color: red;">deleted</h3>';
-        });
+		var are_you_sure = confirm("Confirm delete?!");
+		if (are_you_sure){
+	        var result = $.request('get', event.target.getAttribute("href")); //<a>
+	        result.then(function success(txt) {
+				event.target.parentElement.parentElement.parentElement.getElementsByTagName("a")[0].getElementsByTagName("img")[0].setAttribute("src","/img/deleted.png");
+				event.target.parentElement.innerHTML = '<a href="" class="btn btn-default disabled">deleted</a>';
+	        });
+		}
+        
 	}
 	$('.deletepicturebtn').onClick(deletepicturehandler);
 	
@@ -116,5 +135,19 @@
 	        });
 	    }
 	});
+	
+	// save picture description onto the server
+	function sendpicimportancehandler(event, index){
+		picid = event.target.getAttribute('alt');
+		console.log(picid);
+		importance = event.target.parentElement.parentElement.getElementsByTagName("select")[0].value;
+		console.log(importance);
+        var result = $.request('post', '/picture/update_description/'+picid, {'importance':importance});
+        result.then(function success(txt) {
+			alert('Success! Changed');
+        });
+	}
+	$('.savepicimportancebtn').onClick(sendpicimportancehandler);
+	
 	</script>
 {% endblock %}

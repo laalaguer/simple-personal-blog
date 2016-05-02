@@ -394,6 +394,8 @@ class UpdateProcessedImageDescriptionHandler(webapp2.RequestHandler,UserDetector
     def post(self, public_hash_id):
         description = self.request.get('description',None)
         public = self.request.get('public',None)
+        importance = int(self.request.get('importance',0))
+        
         if public: # if we have some content inside the public
             public = False if public.lower() == 'false' else True
         
@@ -403,7 +405,7 @@ class UpdateProcessedImageDescriptionHandler(webapp2.RequestHandler,UserDetector
         # prepare the response object
         d = {}
         try:
-            db.update_processed_image(public_hash_id,description,public)
+            db.update_processed_image(public_hash_id,description,public,importance)
             d['success'] = True
             self.response.out.write(json.dumps(d,ensure_ascii=False,indent=2, sort_keys=True).encode('utf-8'))
         except Exception as ex:
