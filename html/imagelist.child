@@ -35,7 +35,7 @@
 								</a>
 								{% if is_admin %}
 								<div class="input-group">
-								  	<input id="pic-{{ each.public_hash_id }}" type="text" class="form-control" placeholder="Description...?" aria-describedby="basic-addon2" value="{{ each.description }}">
+								  	<input id="pic-{{ each.public_hash_id }}" type="text" class="form-control picddescriptionfield" placeholder="Description...?" alt="{{ each.public_hash_id }}" aria-describedby="basic-addon2" value="{{ each.description }}">
 									<span class="input-group-btn">
 									   <button class="btn btn-default btn-inline savepicdescriptionbtn" type="button" alt="{{ each.public_hash_id }}"><spain class="glyphicon glyphicon-check" aria-hidden="true"></span></button>
 									</span>
@@ -102,5 +102,19 @@
         });
 	}
 	$('.savepicdescriptionbtn').onClick(sendpicdescrptionhandler);
+	
+	$(".picddescriptionfield").on('|keydown',function (event) {
+	    if (event.keyCode == 13) {
+			picid = event.target.getAttribute('alt');
+			console.log(picid);
+			des = event.target.value;
+			console.log(des);
+	        var result = $.request('post', '/picture/update_description/'+picid, {'description':des});
+	        result.then(function success(txt) {
+				$('#h2-'+picid)[0].innerText = des;
+				alert('Success! Changed to: ' + des);
+	        });
+	    }
+	});
 	</script>
 {% endblock %}

@@ -61,7 +61,7 @@
   transform: translate3d(0,-100%,0);
 }
 
-.hovereffect a, hovereffect p {
+.hovereffect a, .hovereffect p {
   color: #FFF;
   padding: 1em 0;
   opacity: 0;
