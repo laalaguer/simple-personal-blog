@@ -17,6 +17,7 @@ class ServeBlobHandler(blobstore_handlers.BlobstoreDownloadHandler):
         if not blobstore.get(photo_key):
             self.error(404)
         else:
+            self.response.headers['Cache-Control'] = 'no-transform,public,max-age=600,s-maxage=900'
             self.send_blob(photo_key)
 
 class RefreshUploadUrlHandler(webapp2.RequestHandler,UserDetector):
