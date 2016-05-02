@@ -334,7 +334,7 @@ class MainHandler(webapp2.RequestHandler,UserDetector):
         d['title_part'] = 'Home'
         d['blob_serving_url'] = self.app.config['blob_serving_url']
         # image processed, that already on the server
-        d['pictures'] = MyImagedb.ProcessedImages.query_by_page(0,15,allowed_user=d['is_admin']) # a list returned
+        d['pictures'] = MyImagedb.ProcessedImages.query_by_page(0,12,allowed_user=d['is_admin']) # a list returned
         hits = MyArticledb.Article.query_by_importance(allowed_user=d['is_admin'],amount=10)
         d['articles'] =  []
         for each in hits:

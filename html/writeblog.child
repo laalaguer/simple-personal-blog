@@ -158,6 +158,7 @@
 						  </span>
 						</div>
 					  </div>
+					</div>
 	                {% endfor %}
 					</div><!--alreadytherepreviewzone-->
 				</div>
@@ -211,12 +212,17 @@
 		var a_media_body = EE('div', {'@class':'media-body'});
 		
 		for (var i=0;i<message.stored.length;i++){
-			var a_input_group = EE('div',{'@class':'input-group'});
-			var a_input = EE('input', {'@type':'text','@class':'form-control','@value':'{{ blob_serving_url }}' + message.stored[i].blob_key});
+			var file_name_list = message.stored[i].filename.split('_');
+			var file_name = file_name_list[file_name_list.length-1];
 			
-			var file_name_list = message.stored[i].filename.split('_')
-			var file_name = file_name_list[file_name_list.length-1]			
-			var a_addon = EE('span',{'@class':'input-group-addon'},file_name+'px');
+			var a_input_group = EE('div',{'@class':'input-group'});
+			var a_input = EE('input', {'@type':'text','@class':'form-control','@value':'{{ blob_serving_url }}' + message.stored[i].blob_key,'@id':'pic'+file_name+'-'+message.public_hash_id});
+					
+			var a_addon = EE('span',{'@class':'input-group-btn'}); //file_name+'px'
+			var a_addon_btn = EE('button',{'@class':"btn btn-default btn-inline copyimgurlbtn", '@type':'button', '@alt': '#pic'+file_name+'-'+message.public_hash_id}, file_name+'px');
+			var a_addon_btn_span = EE('span',{'@class':"glyphicon glyphicon-copy",'aria-hidden':"true"});
+			a_addon_btn.add(a_addon_btn_span);
+			a_addon.add(a_addon_btn);
 			a_input_group.add(a_input);
 			a_input_group.add(a_addon);
 			a_media_body.add(a_input_group);
@@ -227,6 +233,8 @@
 		a_media.add(a_media_left);
 		a_media.add(a_media_body);
 		$('#myuploadpreviewzone').add(a_media);
+		
+		$('.copyimgurlbtn').on('click', copyimageurl);
     });
 	
 	// delete picture that is already on the server
@@ -237,7 +245,8 @@
 			event.target.parentElement.innerHTML = '<h6 style="color: red;">deleted</h6>';
         });
 	}
-	$('.deletepicturebtn').onClick(deletepicturehandler);
+	//$('.deletepicturebtn').onClick(deletepicturehandler);
+	$('.deletepicturebtn').on('click',deletepicturehandler);
 	
 	function setTimerandRefreshUrl(){
         // we request for a new url for uploading next
@@ -333,6 +342,7 @@
 		    console.log('Oops, unable to copy');
 	    }
 	}
-	$('.copyimgurlbtn').onClick(copyimageurl);
+	// $('.copyimgurlbtn').onClick(copyimageurl);
+	$('.copyimgurlbtn').on('click', copyimageurl);
 </script>
 {% endblock %}

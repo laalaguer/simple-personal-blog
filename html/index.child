@@ -56,7 +56,7 @@
 				<div class="picture-portfolio-container">
 					{% if pictures %}
 						{% for each in pictures %}
-							<div class="col-lg-4 col-md-4 col-sm-4">
+							<div class="col-lg-6 col-md-6 col-sm-6">
 								<a class="thumbnail myimagepreview hovereffect" href="{{ blob_serving_url }}{{ each.blob_1600 }}"> <!-- hovereffect -->
 									<img src="{{ blob_serving_url }}{{ each.blob_512 }}"> <!-- class="img-circle img-portfolio-preview" -->
 									<div class="overlay" style="">
