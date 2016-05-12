@@ -9,12 +9,12 @@
 
 body {
   font-family: 'Lora', 'Times New Roman', serif;
-  font-size: 20px;
+  font-size: 15px;
   color: #404040;
 }
 p {
   line-height: 1.5;
-  margin: 30px 0;
+  margin: 25px 0;
 }
 p a {
   text-decoration: underline;
@@ -26,7 +26,7 @@ h4,
 h5,
 h6 {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 800;
+  font-weight: 600;
 }
 a {
   color: #404040;
@@ -433,4 +433,8 @@ dialog {
 .btn-inline {
 	padding: 6px 12px;
 	border-radius: 4px;
+}
+
+.readarticle img{
+	max-width:100%;
 }

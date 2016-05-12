@@ -12,7 +12,12 @@
 {% extends "motherplate.html" %}
 {% block  html_language %} {{ super() }} {% endblock %}
 {% block  html_title %} {{ article.title }} {% endblock %}
-{% block  html_head %} {{ super() }}  {% endblock %}
+{% block  html_head %}
+<link href="/ckeditor/plugins/codesnippet/lib/highlight/styles/monokai_sublime.css" rel="stylesheet">
+<script src="/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
+<meta name="description" content="{{ article.title }} {% if article.tags %}{% for each in article.tags %}{{ each }}{% endfor %}{% endif %}">
+<meta name="author" content="{{ article.author }}">
+{% endblock %}
 {% block  html_navigation %} {{ super() }} {% endblock %}
 {% block  html_pageheader_title %} 
     <h1>{{ article.title }}</h1>
@@ -31,13 +36,13 @@
 {% block  html_maincontent %}
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-md-8">
+                <div class="col-lg-8 col-md-8 readarticle">
 					<ol class="breadcrumb">
 					  <li><a href="/">Home</a></li>
 					  <li><a href="{{ come_from }}">Posts</a></li>
 					  <li class="active">{{ article.title }}</li>
 					</ol>
-					<h6 class="pull-right"><em>Written by - {{ article.author }}, Last updated: {{ article.last_touch_date.strftime('%Y-%m-%d %H:%M:%S') }}</em></h6>
+					<h5 class="pull-right text-muted"><em>By {{ article.author }}, Last updated: {{ article.last_touch_date.strftime('%Y-%m-%d %H:%M:%S') }}</em></h5>
 					{% if is_admin %}
 						<a href="{{ update_blog }}{{ article.public_hash_id }}" class="btn btn-info">re-edit</a>
 						<a href="{{ delete_blog }}{{ article.public_hash_id }}" class="btn btn-danger deleteblogbtn">delete</a>
@@ -104,4 +109,6 @@
 	
 		</script>
 	{% endif %}
+	
+	<script>hljs.initHighlightingOnLoad();</script>
 {% endblock %}

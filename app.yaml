@@ -4,6 +4,8 @@ runtime: python27
 api_version: 1
 threadsafe: yes
 
+default_expiration: "10m"
+
 handlers:
 - url: /css
   static_dir: html/css

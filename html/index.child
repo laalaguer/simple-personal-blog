@@ -23,7 +23,7 @@
     <div class="container">
         <div class="row">
             <!-- <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"> -->
-			<div class="col-lg-6 col-md-6">
+			<div class="col-lg-6 col-md-6 col-sm-12">
 				{% if articles %}
 		    	{% for each in articles %}
 	                <div class="post-preview">
@@ -52,11 +52,11 @@
                     </li>
                 </ul>
             </div>
-			<div class="col-lg-6 col-md-6">
+			<div class="col-lg-6 col-md-6 col-sm-12">
 				<div class="picture-portfolio-container">
 					{% if pictures %}
 						{% for each in pictures %}
-							<div class="col-lg-6 col-md-6 col-sm-6">
+							<div class="col-lg-6 col-md-12 col-sm-12">
 								<a class="thumbnail myimagepreview hovereffect" href="{{ blob_serving_url }}{{ each.blob_1600 }}"> <!-- hovereffect -->
 									<img src="{{ blob_serving_url }}{{ each.blob_512 }}"> <!-- class="img-circle img-portfolio-preview" -->
 									<div class="overlay" style="">

@@ -8,6 +8,7 @@ from user.handlers import UserDetector # the authorization handler
 from user.handlers import BaseHandler # a webapp2 request handler
 import blogadmins
 from preference import db as MyPreferencedb
+from visitor import db as MyVisitordb
 
 static_path = '/'.join([os.path.dirname(__file__),'html'])
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(static_path))
@@ -346,6 +347,9 @@ class MainHandler(webapp2.RequestHandler,UserDetector):
         d['list_blog'] = self.app.config['list_blog']
         d['view_blog'] = self.app.config['view_blog']
         d['search_blog'] = self.app.config['search_blog']
+        
+        d['visitor_count'] = MyVisitordb.get_visitor_count('index_page')
+        MyVisitordb.add_a_visitor('index_page')
         
         jinja_environment = self.app.config['jinja2_env']
         template = jinja_environment.get_template('/index.child')

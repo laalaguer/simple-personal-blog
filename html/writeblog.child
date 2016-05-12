@@ -109,7 +109,7 @@
 				<div>
 					<button class="btn btn-danger btn-block" id="savehtmlbtn">save data</button>
 				</div>
-				<div id="editorcontentonthefly" class="blog-edit-demo"></div>
+				<div id="editorcontentonthefly" class="blog-edit-demo readarticle"></div>
             </div>
             <div class="col-lg-4 col-md-4">
 		        <div id="myuploadzone" class="dropzone">

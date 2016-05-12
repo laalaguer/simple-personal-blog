@@ -47,9 +47,15 @@
 								  {% if each.importance > 0 %}
 									  <option value='0'>Normal Image</option>
 									  <option value='1' selected="selected">Put on Top</option>
-								  {% else %}
+									  <option value='-1'>Put at Bottom</option>
+								  {% elif each.importance < 0 %}
 									  <option value='0'>Normal Image</option>
 									  <option value='1'>Put on Top</option>
+									  <option value='-1' selected="selected">Put at Bottom</option>
+								  {% else %}
+									  <option value='0' selected="selected">Normal Image</option>
+									  <option value='1'>Put on Top</option>
+									  <option value='-1'>Put at Bottom</option>
 								  {% endif %}
 									</select>
 									<span class="input-group-btn">
